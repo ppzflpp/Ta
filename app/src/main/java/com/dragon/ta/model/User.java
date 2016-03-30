@@ -10,8 +10,8 @@ import cn.bmob.v3.BmobUser;
 public class User extends BmobUser implements Serializable {
 
 
-    private Boolean isLogin;
-    private Boolean sex;
+    private boolean isLogin;
+    private boolean sex;
     private String nick;
 
     public boolean isLogin() {

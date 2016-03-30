@@ -77,7 +77,7 @@ public class Good implements Serializable{
      */
     public static final Map<String, Good> ITEM_MAP = new HashMap<String, Good>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 10;
 
     static {
         // Add some sample items.
@@ -94,9 +94,12 @@ public class Good implements Serializable{
     private static Good createDummyItem(int position) {
         Good good = new Good();
         good.setId(position);
-        good.setInfo("position");
-        good.setName("position");
-        good.setPrice("50");
+        good.setInfo("韩国进口产品，非常好用");
+        good.setName("Item " + position);
+        good.setPrice(String.valueOf(20 + position));
+        good.setThumb("http://pic1.dididadidi.com/201306/63bf0135dcdbba93a7da3d9cded854ad.jpg");
+        good.addImage("http://banbao.chazidian.com/uploadfile/2016-01-25/s145368924044608.jpg");
+        good.addImage("http://pic13.nipic.com/20110415/1369025_121513630398_2.jpg");
         return good;
     }
 }

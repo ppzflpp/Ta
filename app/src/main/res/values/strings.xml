@@ -35,4 +35,5 @@
     <string name="add_cart">Add Cart</string>
     <string name="add_cart_success">Add Success</string>
     <string name="all_money">All: </string>
+    <string name="symbol">￥ </string>
 </resources>

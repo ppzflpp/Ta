@@ -2,6 +2,7 @@ package com.dragon.ta;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.dragon.ta.model.User;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -22,6 +23,7 @@ public class MainApplication extends Application {
         Fresco.initialize(this);
         Bmob.initialize(this,"258351f2c64ca79bd1d6a70e5d89f17f");
         mUser = BmobUser.getCurrentUser(this,User.class);
+
         if(mUser == null){
             mUser = new User();
         }else{

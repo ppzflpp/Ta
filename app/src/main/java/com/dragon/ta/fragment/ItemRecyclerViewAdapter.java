@@ -1,5 +1,7 @@
 package com.dragon.ta.fragment;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import com.dragon.ta.R;
 import com.dragon.ta.fragment.HomeFragment.OnListFragmentInteractionListener;
 import com.dragon.ta.model.Good;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -17,8 +20,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
 
     private final List<Good> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private Context mContext;
 
-    public ItemRecyclerViewAdapter(List<Good> items, OnListFragmentInteractionListener listener) {
+    public ItemRecyclerViewAdapter(Context context,List<Good> items, OnListFragmentInteractionListener listener) {
+        mContext = context;
         mValues = items;
         mListener = listener;
     }
@@ -33,9 +38,11 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
+        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+        holder.mIdView.setVisibility(View.GONE);
+        holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getThumb()));
         holder.mContentView.setText(mValues.get(position).getName());
-        holder.mPriceView.setText(mValues.get(position).getPrice());
+        holder.mPriceView.setText(mContext.getString(R.string.symbol) + mValues.get(position).getPrice());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +62,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final SimpleDraweeView mThumbView;
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mPriceView;
@@ -63,6 +71,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mThumbView = (SimpleDraweeView)view.findViewById(R.id.good_thumb);
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             mPriceView = (TextView)view.findViewById(R.id.price);
