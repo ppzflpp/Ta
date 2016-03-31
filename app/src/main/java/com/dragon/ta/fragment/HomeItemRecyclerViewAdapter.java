@@ -16,13 +16,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 
-public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder> {
+public class HomeItemRecyclerViewAdapter extends RecyclerView.Adapter<HomeItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<Good> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
 
-    public ItemRecyclerViewAdapter(Context context,List<Good> items, OnListFragmentInteractionListener listener) {
+    public HomeItemRecyclerViewAdapter(Context context, List<Good> items, OnListFragmentInteractionListener listener) {
         mContext = context;
         mValues = items;
         mListener = listener;
@@ -31,7 +31,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.home_fragment_list_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cart_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/cart_empty" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cart_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tmp_ll"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".fragment.CartFragment" />
+
+    <LinearLayout
+        android:id="@id/tmp_ll"
+        android:layout_width="match_parent"
+        android:layout_height="36dip"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/cart_goods_all_money"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0" />
+
+        <TextView
+            android:id="@+id/cart_goods_pay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical|right"
+            android:paddingRight="15dip"
+            android:text="@string/pay"/>
+
+    </LinearLayout>
+</RelativeLayout>
+
+

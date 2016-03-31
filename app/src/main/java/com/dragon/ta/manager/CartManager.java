@@ -49,4 +49,22 @@ public class CartManager {
         }
     }
 
+    public ArrayList<CartGood> getCartGoods(){
+        return mCartGoodsArray;
+    }
+
+    public void pay(){
+
+    }
+
+    public float getAllMoney(){
+        float money = 0;
+        synchronized (obj) {
+            for(CartGood cartGood : mCartGoodsArray){
+                money += cartGood.getCount() * Integer.valueOf(cartGood.getGood().getPrice());
+            }
+        }
+        return money;
+    }
+
 }

@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.home_fragment_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ItemRecyclerViewAdapter(this.getActivity().getApplicationContext(),Good.ITEMS, mListener));
+            recyclerView.setAdapter(new HomeItemRecyclerViewAdapter(this.getActivity().getApplicationContext(),Good.ITEMS, mListener));
         }
         return view;
     }
