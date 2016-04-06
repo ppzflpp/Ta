@@ -51,4 +51,7 @@
     <string name="submit_success">Submit Success</string>
     <string name="submit_fail">Submit Fail</string>
     <string name="msg_empty_warning">Message can not been empty!</string>
+    <string name="pay_by_weixin">WinXin Pay</string>
+    <string name="pay_by_zhifubao">ZhiFuBao Pay</string>
+    <string name="pay_count">All: </string>
 </resources>

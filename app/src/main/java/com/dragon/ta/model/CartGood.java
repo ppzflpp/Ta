@@ -11,6 +11,7 @@ public class CartGood {
 
     private Good good;
     private int count;
+    private boolean checked;
 
     public Good getGood() {
         return good;
@@ -26,5 +27,13 @@ public class CartGood {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void setChecked(boolean checked){
+        this.checked = checked;
+    }
+
+    public boolean isChecked(){
+        return this.checked;
     }
 }

@@ -5,43 +5,37 @@
     android:layout_height="64dp"
     android:padding="5dip">
 
-
-    <CheckBox
-        android:id="@+id/cart_list_item_checked_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"/>
-
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/good_thumb"
+        android:id="@+id/activity_pay_good_thumb"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerVertical="true"
-        fresco:placeholderImage="@mipmap/ic_launcher"
-        android:layout_toRightOf="@id/cart_list_item_checked_view"/>
+        fresco:placeholderImage="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dip"
-        android:layout_toLeftOf="@+id/cart_good_count"
-        android:layout_toRightOf="@id/good_thumb"
+        android:layout_toLeftOf="@+id/activity_pay_good_count"
+        android:layout_toRightOf="@id/activity_pay_good_thumb"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/activity_pay_good_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/text_margin_left"
             android:layout_marginTop="@dimen/text_margin_top"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textSize="@dimen/text_size_16"
+            android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/price"
+            android:id="@+id/activity_pay_good_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/text_margin_left"
             android:layout_marginTop="6dip"
+            android:textSize="@dimen/text_size_18"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorRed" />
 
@@ -49,11 +43,12 @@
 
 
     <TextView
-        android:id="@id/cart_good_count"
+        android:id="@id/activity_pay_good_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="10dip"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="@dimen/text_size_16"/>
 </RelativeLayout>

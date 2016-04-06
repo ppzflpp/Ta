@@ -6,10 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.dragon.ta.R;
 import com.dragon.ta.fragment.HomeFragment.OnListFragmentInteractionListener;
+import com.dragon.ta.manager.CartManager;
 import com.dragon.ta.model.CartGood;
 import com.dragon.ta.model.Good;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -43,6 +47,13 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mCartGood = mValues.get(position);
+        holder.mCheckedView.setChecked(holder.mCartGood.isChecked());
+        holder.mCheckedView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateCart(holder.mCartGood,b);
+            }
+        });
         holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getGood().getThumb()));
         holder.mContentView.setText(mValues.get(position).getGood().getName());
         holder.mPriceView.setText(mContext.getString(R.string.symbol) + mValues.get(position).getGood().getPrice());
@@ -72,14 +83,13 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemRe
         return size;
     }
 
-    @Override
-    public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
-
-
+    public void updateCart(CartGood cartGood,boolean checked){
+        CartManager.getInstance().updateCartGoodsState(cartGood,checked);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final CheckBox mCheckedView;
         public final SimpleDraweeView mThumbView;
         public final TextView mCountView;
         public final TextView mContentView;
@@ -89,6 +99,7 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemRe
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mCheckedView = (CheckBox)view.findViewById(R.id.cart_list_item_checked_view);
             mThumbView = (SimpleDraweeView)view.findViewById(R.id.good_thumb);
             mCountView = (TextView) view.findViewById(R.id.cart_good_count);
             mContentView = (TextView) view.findViewById(R.id.content);

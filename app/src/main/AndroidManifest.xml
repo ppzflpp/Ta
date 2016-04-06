@@ -29,7 +29,8 @@
         <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.FeedbackActivity" />
         <activity android:name=".activity.OrderActivity" />
-        <activity android:name=".activity.ProfileActivity"></activity>
+        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.PayActivity"></activity>
     </application>
 
 </manifest>

@@ -8,7 +8,6 @@
     android:paddingRight="5dip"
     android:orientation="vertical">
 
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/good_thumb"
         android:layout_width="240dp"

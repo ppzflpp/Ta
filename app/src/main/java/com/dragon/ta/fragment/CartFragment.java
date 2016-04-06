@@ -1,6 +1,7 @@
 package com.dragon.ta.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dragon.ta.R;
+import com.dragon.ta.activity.PayActivity;
 import com.dragon.ta.manager.CartManager;
 import com.dragon.ta.model.CartGood;
 import com.dragon.ta.model.Good;
@@ -28,11 +30,20 @@ import com.dragon.ta.model.Good;
  */
 public class CartFragment extends Fragment {
 
+    private Context mContext;
     private RecyclerView mRecycleView;
     private TextView mEmptyView;
     private TextView mPayView;
     private TextView mCartGoodsMoneyView;
     private TextView mCartGoodCount;
+
+    private CartManager.CartManagerStateChangeListener mCartManagerStateChangeListener = new CartManager.CartManagerStateChangeListener() {
+        @Override
+        public void onCartManagerStateChangeListener() {
+            updateViews(mContext);
+        }
+    };
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,7 +87,7 @@ public class CartFragment extends Fragment {
     }
 
     private void updateViews(Context context){
-        mCartGoodsMoneyView.setText(context.getString(R.string.all_money) + CartManager.getInstance().getAllMoney());
+        mCartGoodsMoneyView.setText(context.getString(R.string.all_money) + CartManager.getInstance().getAllCheckedMoney());
     }
 
     @Override
@@ -88,17 +99,20 @@ public class CartFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
+        mContext = context;
+        CartManager.getInstance().registerCartManagerStateChangeListener(mCartManagerStateChangeListener);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        CartManager.getInstance().unRegisterCartManagerStateChangeListener(mCartManagerStateChangeListener);
     }
 
     private void pay(){
-        CartManager.getInstance().pay();
+        Intent intent = new Intent(getActivity(), PayActivity.class);
+        getActivity().startActivity(intent);
     }
 
     public interface OnFragmentInteractionListener {
