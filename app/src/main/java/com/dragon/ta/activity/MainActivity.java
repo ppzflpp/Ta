@@ -181,9 +181,19 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.nav_profile) {
+            if(!((MainApplication)getApplication()).getUser().isLogin()){
+                intent.setClass(this,LoginActivity.class);
+                startActivity(intent);
+                return true;
+            }
             intent.setClass(this, ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_my_order) {
+            if(!((MainApplication)getApplication()).getUser().isLogin()){
+                intent.setClass(this,LoginActivity.class);
+                startActivity(intent);
+                return true;
+            }
             intent.setClass(this, OrderActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_feedback) {

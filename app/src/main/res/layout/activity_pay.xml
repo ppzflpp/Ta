@@ -33,7 +33,8 @@
             android:id="@+id/activity_pay_by_weixin"
             android:layout_width="match_parent"
             android:layout_height="36dip"
-            android:layout_marginTop="15dip">
+            android:layout_marginTop="15dip"
+            android:background="@color/colorAccent">
 
             <TextView
                 android:layout_width="match_parent"
@@ -46,7 +47,8 @@
             android:id="@+id/activity_pay_by_zhifubao"
             android:layout_width="match_parent"
             android:layout_height="36dip"
-            android:layout_marginTop="15dip">
+            android:layout_marginTop="15dip"
+            android:background="@color/colorAccent">
 
             <TextView
                 android:layout_width="match_parent"

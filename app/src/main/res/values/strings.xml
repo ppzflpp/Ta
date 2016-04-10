@@ -54,4 +54,19 @@
     <string name="pay_by_weixin">WinXin Pay</string>
     <string name="pay_by_zhifubao">ZhiFuBao Pay</string>
     <string name="pay_count">All: </string>
+    <string name="getting_order">Getting Orders...</string>
+    <string name="pay_succeed"> Pay Success</string>
+    <string name="pay_unknown"> Unknow Pay,please query later</string>
+    <string name="get_order_success_redirect_pay_page">Get order success,redirect to pay page</string>
+    <string name="pay_fail">Pay fail</string>
+    <string name="install">Install</string>
+    <string name="query_order_success">query order success</string>
+    <string name="query_order_fail">query order fail</string>
+    <string name="head_icon">HeadIcon</string>
+    <string name="nick_name">Nick</string>
+    <string name="good_address">Good Address</string>
+    <string name="saving">Saving</string>
+    <string name="warning_nick_empty">nick can not be empty</string>
+    <string name="warning_address_empty">address or phone or zoneCode can not be empty</string>
+    <string name="save_success">save success</string>
 </resources>

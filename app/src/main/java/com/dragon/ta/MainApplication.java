@@ -7,6 +7,7 @@ import android.util.Log;
 import com.dragon.ta.model.User;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
+import c.b.BP;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
@@ -15,13 +16,16 @@ import cn.bmob.v3.BmobUser;
  */
 public class MainApplication extends Application {
 
+    private final static String BOMB_APP_ID = "258351f2c64ca79bd1d6a70e5d89f17f";
+
     private User mUser = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
-        Bmob.initialize(this,"258351f2c64ca79bd1d6a70e5d89f17f");
+        Bmob.initialize(this,BOMB_APP_ID);
+        BP.init(this,BOMB_APP_ID);
         mUser = BmobUser.getCurrentUser(this,User.class);
 
         if(mUser == null){

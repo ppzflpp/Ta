@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
+import com.dragon.ta.activity.LoginActivity;
 import com.dragon.ta.activity.PayActivity;
 import com.dragon.ta.manager.CartManager;
 import com.dragon.ta.model.CartGood;
@@ -111,6 +113,13 @@ public class CartFragment extends Fragment {
     }
 
     private void pay(){
+        if(!((MainApplication)getActivity().getApplication()).getUser().isLogin()){
+            Intent intent = new Intent();
+            intent.setClass(getActivity(),LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         Intent intent = new Intent(getActivity(), PayActivity.class);
         getActivity().startActivity(intent);
     }
