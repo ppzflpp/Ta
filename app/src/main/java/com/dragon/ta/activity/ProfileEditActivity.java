@@ -1,8 +1,10 @@
 package com.dragon.ta.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
+import com.dragon.ta.model.User;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -112,7 +116,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     }
 
-    class SaveTask extends AsyncTask<String,String,String> {
+    class SaveTask extends AsyncTask<String,String,Integer> {
         private String nickName;
         private String goodAddress;
         private String phone;
@@ -125,16 +129,21 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
+
+            User user = ((MainApplication)getApplication()).getUser();
+
             if(nickName != null){
-
+                user.setNick(nickName);
             }else if (goodAddress != null) {
-
-
-            }else{
-
+                user.setAddress(goodAddress);
+                user.setPhone(phone);
+                user.setZoneCode(zoneCode);
             }
-            return null;
+
+            user.update(getApplicationContext());
+
+            return 0;
         }
 
         @Override
@@ -144,10 +153,24 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
             hideDialog();
-            Toast.makeText(getApplicationContext(),getString(R.string.save_success),Toast.LENGTH_SHORT).show();
+            if(result == 0) {
+                Toast.makeText(getApplicationContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                if(mEditStyle == 0) {
+                    intent.putExtra("nick", nickName);
+                }else{
+                    intent.putExtra("address",goodAddress);
+                    intent.putExtra("phone",phone);
+                    intent.putExtra("zone_code", zoneCode);
+                }
+                setResult(1, intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), getString(R.string.save_fail), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

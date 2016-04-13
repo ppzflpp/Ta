@@ -3,6 +3,7 @@ package com.dragon.ta.model;
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Administrator on 2016/3/10 0010.
@@ -13,6 +14,18 @@ public class User extends BmobUser implements Serializable {
     private boolean isLogin;
     private boolean sex;
     private String nick;
+    private String address;
+    private String phone;
+    private String zoneCode;
+    private BmobFile icon;
+
+    public void setIcon(BmobFile icon){
+        this.icon = icon;
+    }
+
+    public BmobFile getIcon(){
+        return icon;
+    }
 
     public boolean isLogin() {
         return isLogin;
@@ -37,6 +50,30 @@ public class User extends BmobUser implements Serializable {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setZoneCode(String zoneCode) {
+        this.zoneCode = zoneCode;
+    }
+
+    public String getZoneCode() {
+        return this.zoneCode;
     }
 
 }

@@ -7,33 +7,39 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.dragon.ta.activity.ProfileEditActivity">
+    tools:context="com.dragon.ta.activity.ProfileEditActivity"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/nick_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/nick_name"/>
 
     <EditText
         android:id="@+id/good_address_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_address"/>
 
     <EditText
         android:id="@+id/good_address_phone_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_phone"/>
 
     <EditText
         android:id="@+id/good_address_zone_code_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_zone_code"/>
 
     <Button
         android:id="@+id/profile_save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="15dip"
+        android:text="@string/save"/>
 
 
 </LinearLayout>

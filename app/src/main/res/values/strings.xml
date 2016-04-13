@@ -69,4 +69,9 @@
     <string name="warning_nick_empty">nick can not be empty</string>
     <string name="warning_address_empty">address or phone or zoneCode can not be empty</string>
     <string name="save_success">save success</string>
+    <string name="save_fail">save fail</string>
+    <string name="none">None</string>
+    <string name="save">Save</string>
+    <string name="prompt_address">address</string>
+    <string name="prompt_zone_code">zone code</string>
 </resources>
