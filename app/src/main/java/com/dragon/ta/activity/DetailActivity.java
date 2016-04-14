@@ -87,7 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         });
         mViewPager = (ViewPager) findViewById(R.id.detail_layout_view_pager);
         mViewPagerAdapter = new ImagePagerAdapter(this.getApplicationContext());
-        mViewPagerAdapter.setImageList(mGood.getImages());
+        mViewPagerAdapter.setImageList(mGood.getImages(getApplicationContext()));
         mViewPager.setAdapter(mViewPagerAdapter);
 
     }

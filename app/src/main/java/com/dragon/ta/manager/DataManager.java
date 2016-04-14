@@ -23,63 +23,60 @@ public class DataManager {
     private List<Good> mGoodsList;
     private Thread mLoadThread;
     private Context mContext;
-    private DataManager(Context context){
+
+    private DataManager(Context context) {
         mContext = context;
     }
 
-    public static DataManager getInstance(Context context){
-        if(sInstance == null) {
+    public static DataManager getInstance(Context context) {
+        if (sInstance == null) {
             sInstance = new DataManager(context);
         }
-        return  sInstance;
+        return sInstance;
     }
 
-    public void loadData(boolean force,Handler handler){
-        if(!force && mGoodsList!= null && mGoodsList.size() > 0){
+    public void loadData(boolean force, Handler handler) {
+        if (!force && mGoodsList != null && mGoodsList.size() > 0) {
             handler.sendEmptyMessage(MSG_LOAD_DATA_SUCCESS);
         }
         loadData(handler);
     }
 
-    private void loadData(final Handler handler){
-        if(mLoadThread != null && mLoadThread.isAlive()){
+    private void loadData(final Handler handler) {
+        if (mLoadThread != null && mLoadThread.isAlive()) {
             return;
         }
 
-        mLoadThread = new Thread(){
-            public void run(){
+        mLoadThread = new Thread() {
+            public void run() {
                 super.run();
                 BmobQuery<Good> query = new BmobQuery<Good>();
                 query.addWhereEqualTo("show", true);
                 query.setLimit(50);
                 query.findObjects(mContext, new FindListener<Good>() {
-                    @Override
-                    public void onSuccess(List<Good> object) {
-                        // TODO Auto-generated method stub
-                        mGoodsList = object;
-                        Log.d(TAG, "onSuccess,size = " + object.size());
-                        for (Good good : object) {
-                            Log.d(TAG,"name = " + good.getName());
-                            Log.d(TAG,"thumb = " + good.getThumb().getFileUrl(mContext));
-                            Log.d(TAG,"images = " + good.getImages());
-                        }
-                        //notify client,data is ready
-                        handler.sendEmptyMessage(MSG_LOAD_DATA_SUCCESS);
-                    }
-                        @Override
-                        public void onError ( int code, String msg){
-                            // TODO Auto-generated method stub
-                            Log.d(TAG, "load data error," + msg);
-                        }
-                    }
+                            @Override
+                            public void onSuccess(List<Good> object) {
+                                // TODO Auto-generated method stub
+                                mGoodsList = object;
+                                Log.d(TAG, "onSuccess,size = " + object.size());
+                                //notify client,data is ready
+                                handler.sendEmptyMessage(MSG_LOAD_DATA_SUCCESS);
+                            }
 
-                    );
-                }
-            };
+                            @Override
+                            public void onError(int code, String msg) {
+                                // TODO Auto-generated method stub
+                                Log.d(TAG, "load data error," + msg);
+                            }
+                        }
+
+                );
+            }
+        };
         mLoadThread.start();
     }
 
-    public List<Good> getData(){
+    public List<Good> getData() {
         return mGoodsList;
     }
 }
