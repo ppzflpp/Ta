@@ -20,7 +20,7 @@ public class HomeFragment extends Fragment {
 
     private int mColumnCount = 2;
     private OnListFragmentInteractionListener mListener;
-
+    private HomeItemRecyclerViewAdapter mAdapter;
     public HomeFragment() {
     }
 
@@ -57,7 +57,8 @@ public class HomeFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new HomeItemRecyclerViewAdapter(this.getActivity().getApplicationContext(),Good.ITEMS, mListener));
+            mAdapter = new HomeItemRecyclerViewAdapter(this.getActivity().getApplicationContext(),null, mListener);
+            recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
@@ -81,6 +82,11 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+    public void updateData(){
+        if(mAdapter != null){
+            mAdapter.updateData();
+        }
+    }
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Good item);

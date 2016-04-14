@@ -3,37 +3,38 @@ package com.dragon.ta.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
+import android.os.Message;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
 import com.dragon.ta.fragment.CartFragment;
 import com.dragon.ta.fragment.HomeFragment;
+import com.dragon.ta.manager.DataManager;
 import com.dragon.ta.model.CartGood;
 import com.dragon.ta.model.Good;
 import com.dragon.ta.model.User;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnListFragmentInteractionListener, CartFragment.OnFragmentInteractionListener {
 
     private TextView mUserNameView;
-    private ImageView mUserIconView;
+    private SimpleDraweeView mUserIconView;
 
     private TextView mHomePageView;
     private TextView mCartView;
@@ -42,6 +43,23 @@ public class MainActivity extends AppCompatActivity
     private Fragment mCartFragment;
 
     private FragmentManager mFragmentManager;
+
+    private MainApplication.DataChangeListener mDataChangeListener;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case DataManager.MSG_LOAD_DATA_SUCCESS:
+                    if(mHomeFragment != null){
+                        ((HomeFragment)mHomeFragment).updateData();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +78,21 @@ public class MainActivity extends AppCompatActivity
 
         initViews();
         onTabSelected(R.id.home_page);
+
+        mDataChangeListener = new MainApplication.DataChangeListener() {
+            @Override
+            public void onDataChange() {
+                String path = ((MainApplication)getApplication()).getUser().getIconPath();
+                Log.d("TAG","onDataChange..." + path);
+                if(path != null) {
+                    mUserIconView.setImageURI(Uri.parse(path));
+                }
+                mUserNameView.setText(((MainApplication)getApplication()).getUser().getNick());
+            }
+        };
+        ((MainApplication)getApplication()).registerDataListener(mDataChangeListener);
+
+        DataManager.getInstance(getApplicationContext()).loadData(true,mHandler);
     }
 
     private void initViews() {
@@ -68,9 +101,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mUserNameView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name);
-        mUserIconView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_icon);
-
-
+        mUserIconView = (SimpleDraweeView) navigationView.getHeaderView(0).findViewById(R.id.user_icon);
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,6 +203,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        ((MainApplication)getApplication()).unregisterDataListener(mDataChangeListener);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

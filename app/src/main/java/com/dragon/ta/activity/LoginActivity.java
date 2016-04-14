@@ -211,10 +211,14 @@ public class LoginActivity extends AppCompatActivity {
             user.login(getApplicationContext(), new SaveListener() {
                 @Override
                 public void onSuccess() {
-                    Log.d("12333333333333", "nick" + user.getObjectByKey(getApplicationContext(), "nick"));
                     ((MainApplication)getApplication()).getUser().setIsLogin(true);
                     ((MainApplication)getApplication()).getUser().setNick((String) user.getObjectByKey(getApplicationContext(), "nick"));
-                    ((MainApplication) getApplication()).getUser().setSex((Boolean)user.getObjectByKey(getApplicationContext(),"sex"));
+                    ((MainApplication) getApplication()).getUser().setSex((Boolean) user.getObjectByKey(getApplicationContext(), "sex"));
+                    ((MainApplication) getApplication()).getUser().setIconPath((String) user.getObjectByKey(getApplicationContext(), "iconPath"));
+                    ((MainApplication) getApplication()).getUser().setAddress((String) user.getObjectByKey(getApplicationContext(), "address"));
+                    ((MainApplication) getApplication()).getUser().setPhone((String) user.getObjectByKey(getApplicationContext(), "phone"));
+                    ((MainApplication) getApplication()).getUser().setZoneCode((String) user.getObjectByKey(getApplicationContext(), "zoneCode"));
+                    ((MainApplication) getApplication()).refleshUI();
                 }
 
                 @Override

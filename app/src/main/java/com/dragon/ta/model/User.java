@@ -17,14 +17,14 @@ public class User extends BmobUser implements Serializable {
     private String address;
     private String phone;
     private String zoneCode;
-    private BmobFile icon;
+    private String iconPath;
 
-    public void setIcon(BmobFile icon){
-        this.icon = icon;
+    public void setIconPath(String iconPath){
+        this.iconPath = iconPath;
     }
 
-    public BmobFile getIcon(){
-        return icon;
+    public String getIconPath(){
+        return iconPath;
     }
 
     public boolean isLogin() {

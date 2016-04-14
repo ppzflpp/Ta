@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dragon.ta.R;
 import com.dragon.ta.fragment.HomeFragment.OnListFragmentInteractionListener;
+import com.dragon.ta.manager.DataManager;
 import com.dragon.ta.model.Good;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class HomeItemRecyclerViewAdapter extends RecyclerView.Adapter<HomeItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Good> mValues;
+    private List<Good> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
 
@@ -40,7 +41,7 @@ public class HomeItemRecyclerViewAdapter extends RecyclerView.Adapter<HomeItemRe
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
         holder.mIdView.setVisibility(View.GONE);
-        holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getThumb()));
+        holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getThumb().getFileUrl(mContext)));
         holder.mContentView.setText(mValues.get(position).getName());
         holder.mPriceView.setText(mContext.getString(R.string.symbol) + mValues.get(position).getPrice());
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +58,12 @@ public class HomeItemRecyclerViewAdapter extends RecyclerView.Adapter<HomeItemRe
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues != null ? mValues.size() : 0;
+    }
+
+    public void updateData(){
+        mValues = DataManager.getInstance(mContext).getData();
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,12 +1,15 @@
 package com.dragon.ta.activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
@@ -44,6 +48,9 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mGoodAddress;
     private User mUser = null;
 
+    private ProgressDialog mProgressDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +79,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         mHeadIconView = (SimpleDraweeView) findViewById(R.id.head_view);
-        if(mUser.getIcon() != null){
-            BmobFile file = mUser.getIcon();
-            Log.d("TAG","url = " + file.getFileUrl(getApplicationContext()));
-            Uri uri = Uri.parse(file.getFileUrl(getApplicationContext()));
+        if (mUser.getIconPath() != null) {
+            String path = mUser.getIconPath();
+            Uri uri = Uri.parse(path);
             mHeadIconView.setImageURI(uri);
         }
 
@@ -119,6 +125,28 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void showDialog(String message) {
+        try {
+            if (mProgressDialog == null) {
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setCancelable(true);
+            }
+            mProgressDialog.setMessage(message);
+            mProgressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing())
+            try {
+                mProgressDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -144,54 +172,92 @@ public class ProfileActivity extends AppCompatActivity {
                 mGoodAddress.setText(goodAddressString);
                 break;
             case 10:
-                Uri uri = data.getData();
-                ContentResolver cr = this.getContentResolver();
-                try {
-                    final Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                     /* 将Bitmap设定到ImageView */
-                    mHeadIconView.setImageBitmap(bitmap);
-
-                    //save icon to server
-                    new Thread() {
-                        public void run() {
-                            super.run();
-
-                            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-                            int quality = 100;
-                            OutputStream stream = null;
-                            try {
-                                stream = new FileOutputStream(getCacheDir() + "tmp_icon.jpg");
-                                bitmap.compress(format, quality, stream);
-                                stream.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            BmobFile bmobFile = new BmobFile(new File(getCacheDir() + "tmp_icon.jpg"));
-                            bmobFile.uploadblock(getApplicationContext(), new UploadFileListener() {
-
-                                @Override
-                                public void onSuccess() {
-                                    //bmobFile.getFileUrl(context)--返回的上传文件的完整地址
-                                    Log.d(TAG,"onSuccess");
-                                }
-
-                                @Override
-                                public void onProgress(Integer value) {
-                                    // 返回的上传进度（百分比）
-                                }
-
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    Log.d(TAG,"onFailure,msg = " + msg);
-                                }
-                            });
-                        }
-                    }.start();
-                } catch (FileNotFoundException e) {
-                    Log.e("Exception", e.getMessage(), e);
-                }
+                final Bitmap bitmap = (Bitmap) data.getParcelableExtra("data");
+                new SaveIconTask(bitmap).execute();
+                Log.d(TAG,"crop bitmap");
                 break;
+        }
+    }
+
+
+    class SaveIconTask extends AsyncTask<String, String, Integer> {
+        private Bitmap iconBitmap;
+        private String iconPath;
+
+        public SaveIconTask(Bitmap icon) {
+            this.iconBitmap = icon;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            User user = ((MainApplication) ProfileActivity.this.getApplication()).getUser();
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+            int quality = 100;
+            OutputStream stream = null;
+            Log.d(TAG, "doInBackground");
+            try {
+                iconPath = getCacheDir() + (SystemClock.currentThreadTimeMillis() + ".jpg");
+                stream = new FileOutputStream(iconPath);
+                iconBitmap.compress(format, quality, stream);
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            final BmobFile bmobFile = new BmobFile(new File(iconPath));
+            bmobFile.uploadblock(getApplicationContext(), new UploadFileListener() {
+
+                @Override
+                public void onSuccess() {
+                    //bmobFile.getFileUrl(context)--返回的上传文件的完整地址
+                    String path = bmobFile.getFileUrl(getApplicationContext());
+                    Log.d(TAG,"save path = " + path);
+                    mUser.setIconPath(path);
+                    mUser.update(getApplicationContext());
+                    ProfileActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mHeadIconView.setImageURI(Uri.parse("file://" + iconPath));
+                            ((MainApplication)getApplication()).refleshUI();
+                            hideDialog();
+                        }
+                    });
+                    Log.d(TAG, "onSuccess");
+                }
+
+                @Override
+                public void onProgress(Integer value) {
+                    // 返回的上传进度（百分比）
+                }
+
+                @Override
+                public void onFailure(int code, String msg) {
+                    Log.d(TAG, "onFailure,msg = " + msg);
+                }
+            });
+
+            return 0;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d(TAG, "onPreExecute");
+            showDialog(getString(R.string.saving));
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            Log.d(TAG, "onPostExecute");
+            if (result == 0) {
+                //maybe ,file is saving when code runnng here
+                //mHeadIconView.setImageURI(Uri.parse("file://" + iconPath));
+                //((MainApplication)getApplication()).refleshUI();
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.save_fail), Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

@@ -54,7 +54,7 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemRe
                 updateCart(holder.mCartGood,b);
             }
         });
-        holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getGood().getThumb()));
+        holder.mThumbView.setImageURI(Uri.parse(mValues.get(position).getGood().getThumb().getFileUrl(mContext)));
         holder.mContentView.setText(mValues.get(position).getGood().getName());
         holder.mPriceView.setText(mContext.getString(R.string.symbol) + mValues.get(position).getGood().getPrice());
         holder.mCountView.setText(mContext.getString(R.string.cart_good_count) + mValues.get(position).getCount());

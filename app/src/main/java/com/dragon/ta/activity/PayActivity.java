@@ -79,7 +79,7 @@ public class PayActivity extends AppCompatActivity {
 
     private View generateItemView(CartGood cartGood) {
         View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_pay_item, null);
-        ((SimpleDraweeView) view.findViewById(R.id.activity_pay_good_thumb)).setImageURI(Uri.parse(cartGood.getGood().getThumb()));
+        ((SimpleDraweeView) view.findViewById(R.id.activity_pay_good_thumb)).setImageURI(Uri.parse(cartGood.getGood().getThumb().getFileUrl(this)));
         ((TextView) view.findViewById(R.id.activity_pay_good_name)).setText(cartGood.getGood().getName());
         ((TextView) view.findViewById(R.id.activity_pay_good_price)).setText(String.valueOf(cartGood.getGood().getPrice()));
         ((TextView) view.findViewById(R.id.activity_pay_good_count)).setText(String.valueOf(cartGood.getCount()));
