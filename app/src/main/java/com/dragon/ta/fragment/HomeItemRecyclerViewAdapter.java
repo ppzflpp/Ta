@@ -63,6 +63,9 @@ public class HomeItemRecyclerViewAdapter extends RecyclerView.Adapter<HomeItemRe
 
     public void updateData(){
         mValues = DataManager.getInstance(mContext).getData();
+        if(mValues == null){
+            return;
+        }
         notifyDataSetChanged();
     }
 

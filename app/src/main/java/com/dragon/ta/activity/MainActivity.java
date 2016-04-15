@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction transaction = mFragmentManager.beginTransaction();
                 transaction.replace(R.id.fragment_container, mHomeFragment);
                 transaction.commit();
+                //update data
+                mHandler.sendEmptyMessage(DataManager.MSG_LOAD_DATA_SUCCESS);
                 break;
             case R.id.cart:
                 if (mCartFragment == null) {
