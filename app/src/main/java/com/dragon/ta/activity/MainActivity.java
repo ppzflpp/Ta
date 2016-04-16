@@ -52,27 +52,38 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case DataManager.MSG_LOAD_DATA_SUCCESS:
-                    if(mHomeFragment != null){
-                        ((HomeFragment)mHomeFragment).updateData();
+                    if (mHomeFragment != null) {
+                        ((HomeFragment) mHomeFragment).updateData();
                     }
                     break;
                 case MSG_UPDATE_UI:
-                    User user = ((MainApplication)getApplication()).getUser();
-                    if(!user.isLogin()) {
-                        mUserIconView.setImageURI(null);
-                        mUserNameView.setText(R.string.user_name);
-                    }
-                    String path = user.getIconPath();
-                    if(path != null) {
-                        mUserIconView.setImageURI(Uri.parse(path));
-                    }
-                    mUserNameView.setText(user.getNick() == null ? user.getUsername() : user.getNick());
+                    User user = ((MainApplication) getApplication()).getUser();
+                    updateViews(user);
                     break;
             }
         }
     };
+
+    private void updateViews(User user) {
+        if (user.isLogin()) {
+            String nick = user.getNick();
+            if (nick == null || "".equals(nick)) {
+                mUserNameView.setText(user.getUsername());
+            } else {
+                mUserNameView.setText(nick);
+            }
+
+            String path = user.getIconPath();
+            if (path != null) {
+                mUserIconView.setImageURI(Uri.parse(path));
+            }
+        } else {
+            mUserNameView.setText(R.string.user_name);
+            mUserIconView.setImageDrawable(getResources().getDrawable(android.R.drawable.sym_def_app_icon));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +109,9 @@ public class MainActivity extends AppCompatActivity
                 mHandler.sendEmptyMessage(MSG_UPDATE_UI);
             }
         };
-        ((MainApplication)getApplication()).registerDataListener(mDataChangeListener);
+        ((MainApplication) getApplication()).registerDataListener(mDataChangeListener);
 
-        DataManager.getInstance(getApplicationContext()).loadData(true,mHandler);
+        DataManager.getInstance(getApplicationContext()).loadData(true, mHandler);
     }
 
     private void initViews() {
@@ -176,11 +187,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        if (((MainApplication) getApplication()).getUser().isLogin()) {
-            mUserNameView.setText(((MainApplication) getApplication()).getUser().getNick());
-        } else {
-            mUserNameView.setText(R.string.user_name);
-        }
+        User user = ((MainApplication) getApplication()).getUser();
+        updateViews(user);
     }
 
     @Override
@@ -216,9 +224,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        ((MainApplication)getApplication()).unregisterDataListener(mDataChangeListener);
+        ((MainApplication) getApplication()).unregisterDataListener(mDataChangeListener);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -228,16 +236,16 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.nav_profile) {
-            if(!((MainApplication)getApplication()).getUser().isLogin()){
-                intent.setClass(this,LoginActivity.class);
+            if (!((MainApplication) getApplication()).getUser().isLogin()) {
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 return true;
             }
             intent.setClass(this, ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_my_order) {
-            if(!((MainApplication)getApplication()).getUser().isLogin()){
-                intent.setClass(this,LoginActivity.class);
+            if (!((MainApplication) getApplication()).getUser().isLogin()) {
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 return true;
             }

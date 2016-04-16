@@ -203,14 +203,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(String... strings) {
-            User user = ((MainApplication) ProfileActivity.this.getApplication()).getUser();
             Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
             int quality = 100;
-            OutputStream stream = null;
             Log.d(TAG, "doInBackground");
             try {
                 iconPath = getCacheDir() + (SystemClock.currentThreadTimeMillis() + ".jpg");
-                stream = new FileOutputStream(iconPath);
+                OutputStream stream = new FileOutputStream(iconPath);
                 iconBitmap.compress(format, quality, stream);
                 stream.close();
             } catch (Exception e) {

@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(phone, password);
-            mAuthTask.execute((Void) null);;
+            mAuthTask.execute((Void) null);
         }
     }
 
@@ -203,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                     ((MainApplication)getApplication()).getUser().setIsLogin(true);
+                    ((MainApplication)getApplication()).getUser().setUsername(mPhone);
                     ((MainApplication)getApplication()).getUser().setNick((String) user.getObjectByKey(getApplicationContext(), "nick"));
                     ((MainApplication) getApplication()).getUser().setSex((Boolean) user.getObjectByKey(getApplicationContext(), "sex"));
                     ((MainApplication) getApplication()).getUser().setIconPath((String) user.getObjectByKey(getApplicationContext(), "iconPath"));
@@ -210,12 +211,13 @@ public class LoginActivity extends AppCompatActivity {
                     ((MainApplication) getApplication()).getUser().setPhone((String) user.getObjectByKey(getApplicationContext(), "phone"));
                     ((MainApplication) getApplication()).getUser().setZoneCode((String) user.getObjectByKey(getApplicationContext(), "zoneCode"));
                     ((MainApplication) getApplication()).refleshUI();
+                    Log.d(TAG,"login success");
                     finish();
                 }
 
                 @Override
                 public void onFailure(int i, String s) {
-                    Log.d(TAG,"LoginActivity,onFailuer,msg  is " + s);
+                    Log.d(TAG,"LoginActivity,onFailure,msg  is " + s);
                 }
             });
 

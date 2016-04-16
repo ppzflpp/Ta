@@ -10,7 +10,6 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 public class User extends BmobUser implements Serializable {
 
-
     private boolean isLogin;
     private boolean sex;
     private String nick;
@@ -19,11 +18,11 @@ public class User extends BmobUser implements Serializable {
     private String zoneCode;
     private String iconPath;
 
-    public void setIconPath(String iconPath){
+    public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
     }
 
-    public String getIconPath(){
+    public String getIconPath() {
         return iconPath;
     }
 
@@ -74,6 +73,16 @@ public class User extends BmobUser implements Serializable {
 
     public String getZoneCode() {
         return this.zoneCode;
+    }
+
+    public void reset() {
+        isLogin = false;
+        sex = false;
+        nick = null;
+        address = null;
+        phone = null;
+        zoneCode = null;
+        iconPath = null;
     }
 
 }

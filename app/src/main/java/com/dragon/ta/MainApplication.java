@@ -49,7 +49,7 @@ public class MainApplication extends Application {
     }
 
     public void logout(){
-        mUser.setIsLogin(false);
+        mUser.reset();
         refleshUI();
     }
 
