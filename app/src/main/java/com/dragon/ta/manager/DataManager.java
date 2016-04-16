@@ -39,6 +39,11 @@ public class DataManager {
         if (!force && mGoodsList != null && mGoodsList.size() > 0) {
             handler.sendEmptyMessage(MSG_LOAD_DATA_SUCCESS);
         }
+
+        if(mGoodsList != null) {
+            mGoodsList.clear();
+        }
+
         loadData(handler);
     }
 

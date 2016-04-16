@@ -3,6 +3,7 @@ package com.dragon.ta.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,16 +29,8 @@ import cn.bmob.v3.listener.SaveListener;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+    private final static String TAG = "LoginActivity";
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -77,15 +70,13 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent();
-                //startActivity(intent);
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-
     }
 
 
@@ -219,11 +210,12 @@ public class LoginActivity extends AppCompatActivity {
                     ((MainApplication) getApplication()).getUser().setPhone((String) user.getObjectByKey(getApplicationContext(), "phone"));
                     ((MainApplication) getApplication()).getUser().setZoneCode((String) user.getObjectByKey(getApplicationContext(), "zoneCode"));
                     ((MainApplication) getApplication()).refleshUI();
+                    finish();
                 }
 
                 @Override
                 public void onFailure(int i, String s) {
-
+                    Log.d(TAG,"LoginActivity,onFailuer,msg  is " + s);
                 }
             });
 

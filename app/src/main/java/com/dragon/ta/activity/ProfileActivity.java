@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -49,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
     private User mUser = null;
 
     private ProgressDialog mProgressDialog;
+    private Button mSignOutButton;
 
 
     @Override
@@ -123,6 +126,16 @@ public class ProfileActivity extends AppCompatActivity {
             String goodAddressString = buffer.toString();
             mGoodAddress.setText(goodAddressString);
         }
+
+        mSignOutButton = (Button)findViewById(R.id.sign_out);
+        mSignOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BmobUser.logOut(getApplicationContext());
+                ((MainApplication)getApplication()).logout();
+                finish();
+            }
+        });
     }
 
     private void showDialog(String message) {

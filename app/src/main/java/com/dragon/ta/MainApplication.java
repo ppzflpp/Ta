@@ -48,6 +48,11 @@ public class MainApplication extends Application {
         mUser = user;
     }
 
+    public void logout(){
+        mUser.setIsLogin(false);
+        refleshUI();
+    }
+
     public void refleshUI(){
         for(DataChangeListener listener : mDataChangesListenerList){
             listener.onDataChange();

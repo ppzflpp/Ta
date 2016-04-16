@@ -2,16 +2,22 @@ package com.dragon.ta.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.dragon.ta.R;
 import com.dragon.ta.manager.CartManager;
+import com.dragon.ta.manager.DataManager;
 import com.dragon.ta.model.Good;
 
 public class HomeFragment extends Fragment {
@@ -21,6 +27,9 @@ public class HomeFragment extends Fragment {
     private int mColumnCount = 2;
     private OnListFragmentInteractionListener mListener;
     private HomeItemRecyclerViewAdapter mAdapter;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout = null;
+
     public HomeFragment() {
     }
 
@@ -46,8 +55,30 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment_list, container, false);
+        View parent = inflater.inflate(R.layout.home_fragment_list, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)parent.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DataManager.getInstance(getContext()).loadData(true,new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        switch (msg.what){
+                            case DataManager.MSG_LOAD_DATA_SUCCESS:
+                                updateData();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                break;
+                        }
+                    }
+                });
+            }
+        });
 
+        //mRefreshView  = (TextView)parent.findViewById(R.id.home_fragment_refresh_view);
+
+
+        View view = parent.findViewById(R.id.list);
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -60,7 +91,7 @@ public class HomeFragment extends Fragment {
             mAdapter = new HomeItemRecyclerViewAdapter(this.getActivity().getApplicationContext(),null, mListener);
             recyclerView.setAdapter(mAdapter);
         }
-        return view;
+        return parent;
     }
 
 

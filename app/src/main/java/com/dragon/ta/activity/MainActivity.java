@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     private MainApplication.DataChangeListener mDataChangeListener;
 
+    private final static int MSG_UPDATE_UI = 10;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -56,6 +57,18 @@ public class MainActivity extends AppCompatActivity
                     if(mHomeFragment != null){
                         ((HomeFragment)mHomeFragment).updateData();
                     }
+                    break;
+                case MSG_UPDATE_UI:
+                    User user = ((MainApplication)getApplication()).getUser();
+                    if(!user.isLogin()) {
+                        mUserIconView.setImageURI(null);
+                        mUserNameView.setText(R.string.user_name);
+                    }
+                    String path = user.getIconPath();
+                    if(path != null) {
+                        mUserIconView.setImageURI(Uri.parse(path));
+                    }
+                    mUserNameView.setText(user.getNick() == null ? user.getUsername() : user.getNick());
                     break;
             }
         }
@@ -82,12 +95,7 @@ public class MainActivity extends AppCompatActivity
         mDataChangeListener = new MainApplication.DataChangeListener() {
             @Override
             public void onDataChange() {
-                String path = ((MainApplication)getApplication()).getUser().getIconPath();
-                Log.d("TAG","onDataChange..." + path);
-                if(path != null) {
-                    mUserIconView.setImageURI(Uri.parse(path));
-                }
-                mUserNameView.setText(((MainApplication)getApplication()).getUser().getNick());
+                mHandler.sendEmptyMessage(MSG_UPDATE_UI);
             }
         };
         ((MainApplication)getApplication()).registerDataListener(mDataChangeListener);
