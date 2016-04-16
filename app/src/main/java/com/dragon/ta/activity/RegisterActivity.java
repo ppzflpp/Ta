@@ -219,7 +219,6 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
         }
 
         @Override

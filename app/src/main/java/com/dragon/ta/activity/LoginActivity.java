@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
@@ -211,6 +212,12 @@ public class LoginActivity extends AppCompatActivity {
                     ((MainApplication) getApplication()).getUser().setPhone((String) user.getObjectByKey(getApplicationContext(), "phone"));
                     ((MainApplication) getApplication()).getUser().setZoneCode((String) user.getObjectByKey(getApplicationContext(), "zoneCode"));
                     ((MainApplication) getApplication()).refleshUI();
+                    LoginActivity.this.mPhoneView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            showProgress(false);
+                        }
+                    });
                     Log.d(TAG,"login success");
                     finish();
                 }
@@ -218,6 +225,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int i, String s) {
                     Log.d(TAG,"LoginActivity,onFailure,msg  is " + s);
+                    LoginActivity.this.mPhoneView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            showProgress(false);
+                            Toast.makeText(getApplicationContext(),getString(R.string.login_fail),Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
 
@@ -229,14 +243,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
         }
 
         @Override
