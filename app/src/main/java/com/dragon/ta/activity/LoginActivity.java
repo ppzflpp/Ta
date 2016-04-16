@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
                     ((MainApplication) getApplication()).getUser().setAddress((String) user.getObjectByKey(getApplicationContext(), "address"));
                     ((MainApplication) getApplication()).getUser().setPhone((String) user.getObjectByKey(getApplicationContext(), "phone"));
                     ((MainApplication) getApplication()).getUser().setZoneCode((String) user.getObjectByKey(getApplicationContext(), "zoneCode"));
-                    ((MainApplication) getApplication()).refleshUI();
+                    ((MainApplication) getApplication()).refreshUI();
                     LoginActivity.this.mPhoneView.post(new Runnable() {
                         @Override
                         public void run() {

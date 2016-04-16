@@ -229,7 +229,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             mHeadIconView.setImageURI(Uri.parse("file://" + iconPath));
-                            ((MainApplication)getApplication()).refleshUI();
+                            ((MainApplication)getApplication()).refreshUI();
                             hideDialog();
                         }
                     });

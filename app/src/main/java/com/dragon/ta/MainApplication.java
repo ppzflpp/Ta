@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.dragon.ta.model.ApplicationData;
 import com.dragon.ta.model.User;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -18,7 +19,7 @@ import cn.bmob.v3.BmobUser;
  */
 public class MainApplication extends Application {
 
-    private final static String BOMB_APP_ID = "258351f2c64ca79bd1d6a70e5d89f17f";
+    private final static String BOMB_APP_ID = ApplicationData.BOMB_APP_ID;
 
     private User mUser = null;
 
@@ -50,10 +51,10 @@ public class MainApplication extends Application {
 
     public void logout(){
         mUser.reset();
-        refleshUI();
+        refreshUI();
     }
 
-    public void refleshUI(){
+    public void refreshUI(){
         for(DataChangeListener listener : mDataChangesListenerList){
             listener.onDataChange();
         }

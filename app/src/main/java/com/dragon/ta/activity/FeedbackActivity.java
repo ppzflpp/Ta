@@ -1,37 +1,24 @@
 package com.dragon.ta.activity;
 
-import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dragon.ta.R;
-import com.dragon.ta.utils.MailSender;
-
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import com.dragon.ta.model.ApplicationData;
+import com.dragon.ta.utils.MailSenderInfo;
+import com.dragon.ta.utils.SimpleMailSender;
 
 public class FeedbackActivity extends AppCompatActivity {
 
-    private static final String SERVER = "smtp.qq.com";
-    private static final String USER_NAME = "499360256";
-    private static final String PASSWORD = "365zfl592";
+    private final static String TAG = "FeedbackActivity";
 
     private EditText mPhoneView;
     private EditText mMsgView;
@@ -42,9 +29,9 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-        mPhoneView = (EditText)findViewById(R.id.feed_phone);
-        mMsgView = (EditText)findViewById(R.id.feed_message);
-        mSubmitButton = (Button)findViewById(R.id.feed_submit);
+        mPhoneView = (EditText) findViewById(R.id.feed_phone);
+        mMsgView = (EditText) findViewById(R.id.feed_message);
+        mSubmitButton = (Button) findViewById(R.id.feed_submit);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,12 +47,12 @@ public class FeedbackActivity extends AppCompatActivity {
 
     }
 
-    private void showProgressDialog(boolean show){
-        if(mDialog != null && mDialog.isShowing()){
+    private void showProgressDialog(boolean show) {
+        if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
 
-        if(!show){
+        if (!show) {
             return;
         }
 
@@ -75,20 +62,18 @@ public class FeedbackActivity extends AppCompatActivity {
         mDialog.show();
     }
 
-    private void resetViews(){
+    private void resetViews() {
         mPhoneView.setText("");
         mMsgView.setText("");
     }
 
 
-    private void submit(String msg){
-        StringBuilder builder = new StringBuilder();
+    private void submit(String msg) {
         new SubmitAsyncTask(msg).execute("");
     }
 
 
-
-    class SubmitAsyncTask extends AsyncTask<String,String,Boolean>{
+    class SubmitAsyncTask extends AsyncTask<String, String, Boolean> {
 
         private String msg;
 
@@ -100,17 +85,38 @@ public class FeedbackActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            return MailSender.sendMail("FeedBack",msg);
+            boolean result = false;
+            try {
+                MailSenderInfo mailInfo = new MailSenderInfo();
+                mailInfo.setMailServerHost("smtp.qq.com");
+                mailInfo.setMailServerPort("25");
+                mailInfo.setValidate(true);
+                mailInfo.setUserName(ApplicationData.SEND_USER_NAME);  //你的邮箱地址
+                mailInfo.setPassword(ApplicationData.SEND_USER_PASSWORD);//您的邮箱密码
+                mailInfo.setFromAddress(ApplicationData.SEND_USER_ADDRESS);
+                mailInfo.setToAddress(ApplicationData.RECEIVER_USER_ADDRESS);
+                mailInfo.setSubject("FeedBack");
+                mailInfo.setContent(msg);
+
+                //这个类主要来发送邮件
+                SimpleMailSender sms = new SimpleMailSender();
+                result = sms.sendTextMail(mailInfo);//发送文体格式
+                //sms.sendHtmlMail(mailInfo);//发送html格式
+
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+            return result;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             showProgressDialog(false);
-            if(result) {
-                Toast.makeText(FeedbackActivity.this, getString(R.string.submit_success), Toast.LENGTH_SHORT).show();
+            if (result) {
+                Toast.makeText(FeedbackActivity.this, getString(R.string.submit_success), Toast.LENGTH_LONG).show();
                 resetViews();
-            }else{
+            } else {
                 Toast.makeText(FeedbackActivity.this, getString(R.string.submit_fail), Toast.LENGTH_SHORT).show();
             }
         }
