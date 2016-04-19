@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ta</string>
+    <string name="app_name">她</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -47,7 +47,7 @@
     <string name="my_order">My Order</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
-    <string name="about_content">Ta,  your best friend! \n by XXX</string>
+    <string name="about_content">Ta,your best friend! \n By XXX</string>
     <string name="feedback_phone_hint">QQ,Email,Phone</string>
     <string name="feedback_message_hint">Input your advices</string>
     <string name="feed_submit">Submit</string>

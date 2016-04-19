@@ -222,9 +222,13 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onSuccess() {
                     //bmobFile.getFileUrl(context)--返回的上传文件的完整地址
                     String path = bmobFile.getFileUrl(getApplicationContext());
-                    Log.d(TAG,"save path = " + path);
+                    Log.d(TAG,"save path = " + path + ",objectId = " + mUser.getObjectId());
                     mUser.setIconPath(path);
-                    mUser.update(getApplicationContext());
+                    try {
+                        mUser.update(getApplicationContext());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     ProfileActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -244,6 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int code, String msg) {
                     Log.d(TAG, "onFailure,msg = " + msg);
+                    hideDialog();
                 }
             });
 

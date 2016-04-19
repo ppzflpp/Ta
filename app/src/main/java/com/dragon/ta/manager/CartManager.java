@@ -19,7 +19,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class CartManager {
     private final static String TAG = "CartManager";
 
-    private  final static boolean TEST = true;
+    private  final static boolean TEST = false;
 
     private static CartManager mInstance;
     private ArrayList<CartGood> mCartGoodsArray;
