@@ -203,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
             user.login(getApplicationContext(), new SaveListener() {
                 @Override
                 public void onSuccess() {
+                    ((MainApplication)getApplication()).setUser(user);
                     ((MainApplication)getApplication()).getUser().setIsLogin(true);
                     ((MainApplication)getApplication()).getUser().setUsername(mPhone);
                     ((MainApplication)getApplication()).getUser().setNick((String) user.getObjectByKey(getApplicationContext(), "nick"));

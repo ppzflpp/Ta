@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +17,11 @@ import com.dragon.ta.MainApplication;
 import com.dragon.ta.R;
 import com.dragon.ta.model.User;
 
+import cn.bmob.v3.listener.UpdateListener;
+
 public class ProfileEditActivity extends AppCompatActivity {
+
+    private final static String TAG = "ProfileEditActivity";
 
     private EditText mNickEditText;
     private EditText mGoodAddressEditText;
@@ -33,12 +38,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         initViews();
     }
 
-    private void initViews(){
-        mNickEditText = (EditText)findViewById(R.id.nick_edit_text);
-        mGoodAddressEditText = (EditText)findViewById(R.id.good_address_edit_text);
-        mPhoneEditText = (EditText)findViewById(R.id.good_address_phone_edit_text);
-        mZoneCodeEditText = (EditText)findViewById(R.id.good_address_zone_code_edit_text);
-        mSaveButton = (Button)findViewById(R.id.profile_save_button);
+    private void initViews() {
+        mNickEditText = (EditText) findViewById(R.id.nick_edit_text);
+        mGoodAddressEditText = (EditText) findViewById(R.id.good_address_edit_text);
+        mPhoneEditText = (EditText) findViewById(R.id.good_address_phone_edit_text);
+        mZoneCodeEditText = (EditText) findViewById(R.id.good_address_zone_code_edit_text);
+        mSaveButton = (Button) findViewById(R.id.profile_save_button);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,12 +51,12 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        mEditStyle = getIntent().getIntExtra("edit_style",0);
-        if(mEditStyle == 0){
+        mEditStyle = getIntent().getIntExtra("edit_style", 0);
+        if (mEditStyle == 0) {
             mGoodAddressEditText.setVisibility(View.GONE);
             mPhoneEditText.setVisibility(View.GONE);
             mZoneCodeEditText.setVisibility(View.GONE);
-        }else{
+        } else {
             mNickEditText.setVisibility(View.GONE);
         }
     }
@@ -79,49 +84,50 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
     }
 
-    private boolean checkData(){
-        if(mEditStyle == 0){
-            if(mNickEditText.getText() == null ||
-                    mNickEditText.getText().toString().length() < 1){
-                Toast.makeText(getApplicationContext(),getString(R.string.warning_nick_empty),Toast.LENGTH_SHORT).show();
+    private boolean checkData() {
+        if (mEditStyle == 0) {
+            if (mNickEditText.getText() == null ||
+                    mNickEditText.getText().toString().length() < 1) {
+                Toast.makeText(getApplicationContext(), getString(R.string.warning_nick_empty), Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }else{
-            if(mGoodAddressEditText.getText() == null
+        } else {
+            if (mGoodAddressEditText.getText() == null
                     || mGoodAddressEditText.getText().toString().length() < 1
                     || mPhoneEditText.getText() == null
                     || mPhoneEditText.getText().toString().length() < 1
                     || mZoneCodeEditText.getText() == null
-                    || mZoneCodeEditText.getText().toString().length() < 1){
-                Toast.makeText(getApplicationContext(),getString(R.string.warning_address_empty),Toast.LENGTH_SHORT).show();
+                    || mZoneCodeEditText.getText().toString().length() < 1) {
+                Toast.makeText(getApplicationContext(), getString(R.string.warning_address_empty), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
         return true;
     }
 
-    private void saveData(){
-        if(!checkData()){
+    private void saveData() {
+        if (!checkData()) {
             return;
         }
 
-        if(mEditStyle == 0) {
+        if (mEditStyle == 0) {
             String nickName = mNickEditText.getText().toString();
-            new SaveTask(nickName,null,null,null).execute();
-        }else{
+            new SaveTask(nickName, null, null, null).execute();
+        } else {
             String address = mGoodAddressEditText.getText().toString();
             String phone = mPhoneEditText.getText().toString();
             String zoneCode = mZoneCodeEditText.getText().toString();
-            new SaveTask(null,address,phone,zoneCode).execute();
+            new SaveTask(null, address, phone, zoneCode).execute();
         }
     }
 
-    class SaveTask extends AsyncTask<String,String,Integer> {
+    class SaveTask extends AsyncTask<String, String, Integer> {
         private String nickName;
         private String goodAddress;
         private String phone;
         private String zoneCode;
-        public SaveTask(String nickName,String goodAddress,String phone,String zoneCode){
+
+        public SaveTask(String nickName, String goodAddress, String phone, String zoneCode) {
             this.nickName = nickName;
             this.goodAddress = goodAddress;
             this.phone = phone;
@@ -131,17 +137,27 @@ public class ProfileEditActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String... strings) {
 
-            User user = ((MainApplication)getApplication()).getUser();
+            User user = ((MainApplication) getApplication()).getUser();
 
-            if(nickName != null){
+            if (nickName != null) {
                 user.setNick(nickName);
-            }else if (goodAddress != null) {
+            } else if (goodAddress != null) {
                 user.setAddress(goodAddress);
                 user.setPhone(phone);
                 user.setZoneCode(zoneCode);
             }
 
-            user.update(getApplicationContext());
+            user.update(getApplicationContext(), new UpdateListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "update profile success");
+                }
+
+                @Override
+                public void onFailure(int i, String s) {
+                    Log.d(TAG, "update profile fail,msg is " + s);
+                }
+            });
 
             return 0;
         }
@@ -156,19 +172,19 @@ public class ProfileEditActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
             hideDialog();
-            if(result == 0) {
+            if (result == 0) {
                 Toast.makeText(getApplicationContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                if(mEditStyle == 0) {
+                if (mEditStyle == 0) {
                     intent.putExtra("nick", nickName);
-                }else{
-                    intent.putExtra("address",goodAddress);
-                    intent.putExtra("phone",phone);
+                } else {
+                    intent.putExtra("address", goodAddress);
+                    intent.putExtra("phone", phone);
                     intent.putExtra("zone_code", zoneCode);
                 }
                 setResult(1, intent);
                 finish();
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.save_fail), Toast.LENGTH_SHORT).show();
             }
         }
